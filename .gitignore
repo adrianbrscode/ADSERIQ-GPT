@@ -1,1 +1,6 @@
+
+#ignorar archivos de compilacion
 backend/__pycache__
+
+#ignorar variables de entorno
+backend/.env
