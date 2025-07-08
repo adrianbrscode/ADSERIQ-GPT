@@ -1,3 +1,5 @@
+import json
+
 from openai.resources.containers.files import content
 from openai.types import completion
 
@@ -15,12 +17,21 @@ class ChatService:
             messages=[
                 {"role": "developer",
                  "content": "Te llamas Nina, y eres una asistente de la empresa AdserIQ, presentate como tal"},
-                {"role": "user", "content": "hello"}
+                {"role": "user", "content": "hola, eres humana"}
             ],
-            stream=False
+            stream=True
         )
+        print("hola")
+        for chunk in completion:
+            delta = chunk.choices[0].delta
+            finish_reason = chunk.choices[0].finish_reason
 
-        #for chunk in completion:
-        #    print(chunk.choices[0].delta)
+            if delta.content:
+                yield json.dumps({"content":delta.content})+"\n"
+                print(delta.content)
 
-        return completion.choices[0].message.content
+            if finish_reason is not None:
+                print("termino")
+                yield json.dumps({"finish_reason":finish_reason})+"\n"
+                break
+        #return completion.choices[0].message.content
